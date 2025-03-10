@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Session from '../models/Session.js';
 import User from '../models/User.js';
 
@@ -50,26 +49,3 @@ export const deleteSession = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to delete session' });
   }
 };
-=======
-import Session from "../models/Session.js";
-
-export const createSession = async (req, res) => {
-  try {
-    const { title } = req.body;
-    const session = new Session({ title, host: req.user, users: [req.user] });
-    await session.save();
-    res.json(session);
-  } catch (error) {
-    res.status(500).json({ error: "Error creating session" });
-  }
-};
-
-export const getSessions = async (req, res) => {
-  try {
-    const sessions = await Session.find().populate("host", "username");
-    res.json(sessions);
-  } catch (error) {
-    res.status(500).json({ error: "Error fetching sessions" });
-  }
-};
->>>>>>> 59da2ae (First Prototype Commit)
