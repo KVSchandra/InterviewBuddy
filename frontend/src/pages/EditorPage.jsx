@@ -45,20 +45,30 @@ const EditorPage = () => {
     socket.emit("code-change", { sessionId: roomId, code: newValue });
   };
 
-  const handleRun = async () => {
+  const SERVER_URL = "https://interviewbuddy-5sql.onrender.com";  // Use production backend
+
+const handleRun = async () => {
     try {
       const response = await fetch(`${SERVER_URL}/api/run`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
         body: JSON.stringify({ code, language }),
+        credentials: "include",  // ✅ Ensures cookies & auth headers are sent
       });
+
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
       const data = await response.json();
       setOutput(data.output || "No output returned.");
     } catch (err) {
       setOutput(`Error: ${err.message}`);
     }
-  };
+};
+
+  
 
   const handleSave = async () => {
     try {

@@ -3,17 +3,29 @@ import Room from '../models/Room.js';
 
 const router = express.Router();
 
-// Create a new room
+
 router.post('/create', async (req, res) => {
   const { roomId } = req.body;
+
+  if (!roomId) {
+    return res.status(400).json({ success: false, message: "Room ID is required." });
+  }
+
   try {
+    const existingRoom = await Room.findOne({ roomId });
+    if (existingRoom) {
+      return res.status(409).json({ success: false, message: "Room ID already exists." });
+    }
+
     const newRoom = new Room({ roomId });
     await newRoom.save();
     res.status(201).json({ success: true, roomId });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Failed to create room.' });
+    console.error("Error creating room:", err);
+    res.status(500).json({ success: false, message: "Failed to create room." });
   }
 });
+
 
 // Check if a room exists
 router.get('/exists/:roomId', async (req, res) => {
