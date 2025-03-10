@@ -8,7 +8,10 @@ import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
-const socket = io("https://interviewbuddy-5sql.onrender.com");
+const socket = io("https://interviewbuddy-5sql.onrender.com", {
+  transports: ["websocket", "polling"],
+  withCredentials: true
+});
 
 const EditorPage = () => {
   const { roomId } = useParams();

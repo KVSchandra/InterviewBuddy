@@ -2,13 +2,17 @@ import { Server } from "socket.io";
 
 const setupEditorSocket = (server) => {
   if (!server) {
-    console.error("❌ Error: No server instance provided to setupEditorSocket!");
+    console.error("Error: No server instance provided to setupEditorSocket!");
     return;
   }
 
   const io = new Server(server, {
-    cors: { origin: "https://interviewbuddy-frontend-sl4m.onrender.com", methods: ["GET", "POST"] },
+    cors: {
+        origin: ["http://localhost:5173", "https://interviewbuddy-frontend-sl4m.onrender.com"],
+        methods: ["GET", "POST"],
+    }
   });
+
 
   io.on("connection", (socket) => {
     console.log("✅ User connected:", socket.id);
@@ -23,7 +27,7 @@ const setupEditorSocket = (server) => {
     });
 
     socket.on("disconnect", () => {
-      console.log("❌ User disconnected:", socket.id);
+      console.log("User disconnected:", socket.id);
     });
   });
 };

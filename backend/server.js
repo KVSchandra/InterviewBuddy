@@ -25,17 +25,18 @@ app.use('/api/run', runRouter);
 app.use('/api/codeSnippets', codeSnippetsRouter);
 
 const allowedOrigins = [
-  'http://localhost:5173', 
-  'https://interviewbuddy-frontend-sl4m.onrender.com' 
+  "http://localhost:5173", 
+  "https://interviewbuddy-frontend-sl4m.onrender.com"
 ];
 
 const io = new Server(server, {
   cors: {
-    origin: allowedOrigins,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
+      origin: allowedOrigins,
+      methods: ["GET", "POST"],
+      credentials: true,
+  }
 });
+
 
 const PORT = process.env.PORT || 5000;
 setupEditorSocket(server)
