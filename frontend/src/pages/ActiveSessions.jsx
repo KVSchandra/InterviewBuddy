@@ -6,7 +6,7 @@ const ActiveSessions = () => {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/sessions")
+    fetch("https://interviewbuddy-5sql.onrender.com/api/sessions")
       .then((res) => res.json())
       .then((data) => setSessions(data))
       .catch((err) => console.error("Error fetching sessions:", err));

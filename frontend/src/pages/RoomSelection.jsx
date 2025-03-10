@@ -9,7 +9,7 @@ function RoomSelection() {
 
   const createRoom = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/rooms/create', {
+      const response = await fetch('https://interviewbuddy-5sql.onrender.com/api/rooms/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ roomId: createdRoomId }),
@@ -31,7 +31,7 @@ function RoomSelection() {
 
   const joinRoom = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/rooms/exists/${roomId}`);
+      const response = await fetch(`https://interviewbuddy-5sql.onrender.com/api/rooms/exists/${roomId}`);
       const data = await response.json();
       if (data.exists) {
         navigate(`/editor/${roomId}`);

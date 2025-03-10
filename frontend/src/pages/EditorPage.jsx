@@ -8,7 +8,7 @@ import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
-const socket = io("http://localhost:5000");
+const socket = io("https://interviewbuddy-5sql.onrender.com");
 
 const EditorPage = () => {
   const { roomId } = useParams();
@@ -43,7 +43,7 @@ const EditorPage = () => {
 
   const handleRun = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/run", {
+      const response = await fetch("https://interviewbuddy-5sql.onrender.com/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, language }),
@@ -57,7 +57,7 @@ const EditorPage = () => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/codeSnippets/save", {
+      const response = await fetch("https://interviewbuddy-5sql.onrender.com/api/codeSnippets/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomId, code, language }),
@@ -75,7 +75,7 @@ const EditorPage = () => {
 
   const handleLoad = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/codeSnippets/load/${roomId}`);
+      const response = await fetch(`https://interviewbuddy-5sql.onrender.com/api/codeSnippets/load/${roomId}`);
       const data = await response.json();
       if (data.success) {
         setCode(data.code);
