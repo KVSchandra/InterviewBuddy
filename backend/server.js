@@ -17,7 +17,7 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'https://interviewbuddy-frontend-sl4m.onrender.com', credentials: true }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomsRouter);
@@ -26,7 +26,7 @@ app.use('/api/codeSnippets', codeSnippetsRouter);
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'https://interviewbuddy-frontend-sl4m.onrender.com',
     methods: ['GET', 'POST'],
   },
 });
