@@ -8,9 +8,11 @@ import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
-const socket = io("https://interviewbuddy-5sql.onrender.com", {
+const SERVER_URL = "https://interviewbuddy-5sql.onrender.com";
+
+const socket = io(SERVER_URL, {
   transports: ["websocket", "polling"],
-  withCredentials: true
+  withCredentials: true,
 });
 
 const EditorPage = () => {
@@ -19,40 +21,40 @@ const EditorPage = () => {
   const [language, setLanguage] = useState("javascript");
   const [output, setOutput] = useState("");
 
-  console.log("Room ID:", roomId); // Debugging
-
   useEffect(() => {
     if (!roomId) {
-      console.error("Room ID is null! Check your URL.");
+      console.error("Error: Room ID is null! Check your URL.");
       return;
     }
 
-    socket.emit("join-room", roomId);
-    console.log(`Joining room: ${roomId}`); // Debugging
+    socket.emit("join-session", roomId);
+    console.log(`Joined room: ${roomId}`);
 
-    socket.on("receive-changes", (newCode) => {
-      setCode(newCode);
+    socket.on("code-update", (newCode) => {
+      if (newCode !== code) setCode(newCode);
     });
 
     return () => {
-      socket.off("receive-changes");
+      socket.off("code-update");
+      socket.off("join-session");
     };
-  }, [roomId]);
+  }, [roomId, code]);
 
   const handleChange = (newValue) => {
     setCode(newValue);
-    socket.emit("code-change", { roomId, code: newValue });
+    socket.emit("code-change", { sessionId: roomId, code: newValue });
   };
 
   const handleRun = async () => {
     try {
-      const response = await fetch("https://interviewbuddy-5sql.onrender.com/api/run", {
+      const response = await fetch(`${SERVER_URL}/api/run`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, language }),
       });
+
       const data = await response.json();
-      setOutput(data.output);
+      setOutput(data.output || "No output returned.");
     } catch (err) {
       setOutput(`Error: ${err.message}`);
     }
@@ -60,17 +62,14 @@ const EditorPage = () => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch("https://interviewbuddy-5sql.onrender.com/api/codeSnippets/save", {
+      const response = await fetch(`${SERVER_URL}/api/codeSnippets/save`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ roomId, code, language }),
       });
+
       const data = await response.json();
-      if (data.success) {
-        alert("Code snippet saved successfully.");
-      } else {
-        alert("Failed to save code snippet.");
-      }
+      alert(data.success ? "Code snippet saved successfully." : "Failed to save code snippet.");
     } catch (err) {
       alert(`Error: ${err.message}`);
     }
@@ -78,13 +77,14 @@ const EditorPage = () => {
 
   const handleLoad = async () => {
     try {
-      const response = await fetch(`https://interviewbuddy-5sql.onrender.com/api/codeSnippets/load/${roomId}`);
+      const response = await fetch(`${SERVER_URL}/api/codeSnippets/load/${roomId}`);
       const data = await response.json();
+
       if (data.success) {
         setCode(data.code);
         setLanguage(data.language);
       } else {
-        alert("No code snippet found for this room.");
+        alert("No saved code snippet found for this room.");
       }
     } catch (err) {
       alert(`Error: ${err.message}`);

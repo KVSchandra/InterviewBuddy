@@ -1,33 +1,28 @@
 import { Server } from "socket.io";
 
-const setupEditorSocket = (server) => {
-  if (!server) {
-    console.error("Error: No server instance provided to setupEditorSocket!");
+const setupEditorSocket = (io) => {
+  if (!io) {
+    console.error("Error: No Socket.IO instance provided to setupEditorSocket!");
     return;
   }
 
-  const io = new Server(server, {
-    cors: {
-        origin: ["http://localhost:5173", "https://interviewbuddy-frontend-sl4m.onrender.com"],
-        methods: ["GET", "POST"],
-    }
-  });
-
-
   io.on("connection", (socket) => {
-    console.log("✅ User connected:", socket.id);
+    console.log(`User connected: ${socket.id}`);
 
     socket.on("join-session", (sessionId) => {
+      if (!sessionId) return;
       socket.join(sessionId);
-      console.log(`User ${socket.id} joined session ${sessionId}`);
+      console.log(`👥 User ${socket.id} joined session ${sessionId}`);
     });
 
     socket.on("code-change", ({ sessionId, code }) => {
+      if (!sessionId || code === undefined) return;
       socket.to(sessionId).emit("code-update", code);
+      console.log(`Code update in session ${sessionId} by ${socket.id}`);
     });
 
     socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
+      console.log(`User disconnected: ${socket.id}`);
     });
   });
 };

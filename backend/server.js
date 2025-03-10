@@ -16,28 +16,31 @@ connectToDB();
 const app = express();
 const server = http.createServer(app);
 
-app.use(express.json());
-app.use(cors({ origin: 'https://interviewbuddy-frontend-sl4m.onrender.com', credentials: true }));
+const allowedOrigins = [
+  "http://localhost:5173",  // Development
+  "https://interviewbuddy-frontend-sl4m.onrender.com",  // Production
+  "https://interviewbuddy-5sql.onrender.com" // Backend
+];
 
+app.use(express.json());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
+
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomsRouter);
 app.use('/api/run', runRouter);
 app.use('/api/codeSnippets', codeSnippetsRouter);
 
-const allowedOrigins = [
-  "http://localhost:5173", 
-  "https://interviewbuddy-frontend-sl4m.onrender.com"
-];
-
+// Socket.IO setup
 const io = new Server(server, {
   cors: {
-      origin: allowedOrigins,
-      methods: ["GET", "POST"],
-      credentials: true,
+    origin: allowedOrigins,
+    methods: ["GET", "POST"],
+    credentials: true,
   }
 });
 
+setupEditorSocket(io); 
 
 const PORT = process.env.PORT || 5000;
-setupEditorSocket(server)
-app.listen(PORT, () => {console.log(`Server running on port ${PORT}`)})
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
