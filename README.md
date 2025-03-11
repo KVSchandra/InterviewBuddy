@@ -34,7 +34,7 @@ InterviewBuddy is designed for coding interviews where interviewers and candidat
 1. Clone the repository:
    ```bash
    git clone https://github.com/KVSchandra/InterviewBuddy.git
-   cd interviewbuddy
+   cd interviewBuddy
    ```
 
 2. Install dependencies:
