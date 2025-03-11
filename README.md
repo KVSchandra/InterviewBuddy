@@ -33,18 +33,18 @@ InterviewBuddy is designed for coding interviews where interviewers and candidat
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/interviewbuddy.git
+   git clone https://github.com/KVSchandra/InterviewBuddy.git
    cd interviewbuddy
    ```
 
 2. Install dependencies:
    ```bash
    # Install server dependencies
-   cd server
+   cd backend
    npm install
 
    # Install client dependencies
-   cd ../client
+   cd frontend
    npm install
    ```
 
@@ -58,12 +58,12 @@ InterviewBuddy is designed for coding interviews where interviewers and candidat
 4. Run the application:
    ```bash
    # Start backend
-   cd server
+   cd backend
    npm run dev
    
    # Start frontend
-   cd ../client
-   npm start
+   cd frontend
+   npm run dev
    ```
 
 ## Usage
